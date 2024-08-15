@@ -4,28 +4,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  create-repo:
+  create:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Install GitHub CLI
+    - name: Create Token
+      uses: actions/create-github-app-token@v1
+      with:
+        app_id: ${{ secrets.APP_ID }}
+        private_key: ${{ secrets.PRIVATE_KEY }}
+    - name: Authenticate with CLI
       run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-        sudo apt-add-repository https://cli.github.com/packages
-        sudo apt update
-        sudo apt install gh
-
-    - name: Authenticate with GitHub CLI
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ehco "${{ steps.create.outputs.token }}" | gh auth login --with-token
+    - name: Create Project
       run: |
-        echo $GITHUB_TOKEN | gh auth login --with-token
-
-    - name: Create new repository
-      run: |
-        gh repo create my-new-repo --public
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        gh project create --owner si-sa-a --title "My Project"
