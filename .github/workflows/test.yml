@@ -1,0 +1,20 @@
+name: Create GitHub Project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Token
+      uses: actions/create-github-app-token@v1
+      with:
+        app_id: ${{ secrets.APP_ID }}
+        private_key: ${{ secrets.PRIVATE_KEY }}
+    - name: Authenticate with CLI
+      run: |
+        ehco "${{ steps.create.outputs.token }}" | gh auth login --with-token
+    - name: Create Project
+      run: |
+        gh project create --owner si-sa-a --title "My Project"
