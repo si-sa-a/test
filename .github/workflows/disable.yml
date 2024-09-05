@@ -18,4 +18,9 @@ jobs:
         echo "${{ steps.create-token.outputs.token }}" | gh auth login --with-token
     - name: disable
       run: |
-        gh workflow disable "test.yml"
+        # gh workflow disable "test.yml"
+        gh api \
+          --method PUT \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/si-sa-a3/test3/actions/workflows/disable.yml/disable
