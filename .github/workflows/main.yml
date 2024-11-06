@@ -13,3 +13,5 @@ jobs:
     - name: small test
       id: small-test
       uses: ./.github/plugin/small-test.yml
+      with:
+        example_input: "Hello, World!"
