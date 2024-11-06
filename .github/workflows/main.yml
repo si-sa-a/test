@@ -1,0 +1,10 @@
+name: Main Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call_other_workflow:
+    uses: ./.github/plugin/sub.yml@main
+    id: small-test
+    echo "${{ steps.small-test.outcome}}"
