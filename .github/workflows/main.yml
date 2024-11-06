@@ -8,10 +8,10 @@ jobs:
     name: Build & test
     runs-on: ubuntu-latest
     steps:
-    - name: Check out
-      uses: actions/checkout@v4
-    - name: small test
-      id: small-test
-      uses: ./.github/plugin/small-test.yml
-      with:
-        example_input: "Hello, World!"
+      - name: Check out
+        uses: actions/checkout@v4
+
+  call-small-test:
+    uses: ./.github/workflows/small-test.yml
+    with:
+      example_input: "Hello, World!"
