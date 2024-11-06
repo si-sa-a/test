@@ -11,6 +11,6 @@ jobs:
         uses: actions/checkout@v4
 
   call-small-test:
-    uses: ./.github/plugin/small-test.yml@main
+    uses: ./.github/plugin/small-test.yml
     with:
       example_input: "Hello, World!"
