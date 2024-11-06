@@ -4,14 +4,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  build-and-test:
+    name: Build & test
     runs-on: ubuntu-latest
     steps:
+    - name: Check out
+      uses: actions/checkout@4
     - name: small test
       id: small-test
       uses: ./.github/plugin/small-test.yml
-    - name: 完了
-      if: always()
-      uses: ./.github/plugin/gate.yml
-      with:
-        check: ${{ steps.small-test.outcome}}
