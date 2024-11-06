@@ -4,8 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  call_other_workflow:
-    uses: ./.github/plugin/sub.yml@main
-    id: small-test
-    run: |
-      echo "${{ steps.small-test.outcome}}"
+  name: test
+  runs-on: ubuntu-latest
+  steps:
+    - name: small test
+      id: small-test
+      uses: ./.github/plugin/small-test.yml
+    - name: 完了
+      if: always()
+      uses: ./.github/plugin/gate.yml
+      with:
+        check: ${{ steps.small-test.outcome}}
