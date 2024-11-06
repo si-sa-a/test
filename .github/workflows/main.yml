@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  name: test
-  runs-on: ubuntu-latest
-  steps:
+  test:
+    runs-on: ubuntu-latest
+    steps:
     - name: small test
       id: small-test
       uses: ./.github/plugin/small-test.yml
