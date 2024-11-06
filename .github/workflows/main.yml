@@ -12,6 +12,6 @@ jobs:
 
   call-small-test:
     needs: [build-and-test]
-    uses: ./.github/plugin/small-test.yml
+    uses: ./.github/workflows/plugin/small-test.yml
     with:
       example_input: "Hello, World!"
