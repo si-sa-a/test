@@ -11,6 +11,7 @@ jobs:
         uses: actions/checkout@v4
 
   call-small-test:
+    needs: [build-and-test]
     uses: ./.github/workflows/small-test.yml
     with:
       example_input: "Hello, World!"
