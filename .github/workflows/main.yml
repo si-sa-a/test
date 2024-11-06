@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out
-      uses: actions/checkout@4
+      uses: actions/checkout@v4
     - name: small test
       id: small-test
       uses: ./.github/plugin/small-test.yml
