@@ -7,19 +7,18 @@ jobs:
   build-and-test:
     name: aaa
     uses: ./.github/workflows/build.yml
-    with:
-      pull_request_ref: {{ github.event.pull_request.head.ref }}
 
   small-test:
     name: bbb
     needs: [build-and-test]
     uses: ./.github/workflows/small-test.yml
-    with:
-      pull_request_ref: {{ github.event.pull_request.head.ref }}
 
   small-test-notification:
     name: ccc
-    needs: [small-test]
-    uses: ./.github/workflows/small-test-notification.yml
-    with:
-      conclusion: ${{ needs.small-test.outcome }}
+    needs: small-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Notify
+        run: echo "Conclusion: ${{ needs.small-test.outcome }}"

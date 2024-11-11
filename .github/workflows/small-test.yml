@@ -2,10 +2,6 @@ name: Called Workflow
 
 on:
   workflow_call:
-    inputs:
-      pull_request_ref:
-        required: true
-        type: string
 
 jobs:
   small-test:
@@ -14,8 +10,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.pull_request_ref }}
       - name: small test実行
         id: small-test
         run: |
