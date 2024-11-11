@@ -21,4 +21,4 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Notify
-        run: echo "${{ needs.small-test.result }}"
+        run: echo "${{ needs.small-test.conclusion }}"
