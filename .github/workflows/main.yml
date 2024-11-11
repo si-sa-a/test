@@ -5,14 +5,18 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out
-        uses: actions/checkout@v4
+    name: aaa
+    uses: ./.github/workflows/build.yml
 
-  call-small-test:
-    needs: [build-and-test]
+  small-test:
+    name: bbb
+    need: [build-and-test]
     uses: ./.github/workflows/small-test.yml
+
+  small-test-notification:
+    name: ccc
+    need: [small-test]
+    uses: ./.github/workflows/small-test-notification.yml
     with:
-      example_input: "Hello, World!"
+      conclusion: ${{ needs.small-test.outcome }}
       

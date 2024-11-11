@@ -1,0 +1,27 @@
+name: Called Workflow
+
+on:
+  workflow_call:
+    inputs:
+      pull_request_ref:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      build_version: ${{ steps.build.outputs.build_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.pull_request_ref }}
+      - name: Build
+        id: build
+        run: |
+          echo 開発が実装
+          build_version=$(git rev-parse --short HEAD)
+          echo "build_version=$build_version" >> $GITHUB_OUTPUT
+          echo $build_version
