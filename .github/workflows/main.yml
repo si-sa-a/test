@@ -10,13 +10,12 @@ jobs:
 
   small-test:
     name: bbb
-    need: [build-and-test]
+    needs: [build-and-test]
     uses: ./.github/workflows/small-test.yml
 
   small-test-notification:
     name: ccc
-    need: [small-test]
+    needs: [small-test]
     uses: ./.github/workflows/small-test-notification.yml
     with:
       conclusion: ${{ needs.small-test.outcome }}
-      
