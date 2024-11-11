@@ -17,6 +17,6 @@ jobs:
         with:
           ref: ${{ inputs.pull_request_ref }}
       - name: small test実行
-       id: small-test
-       run: |
-        echo 開発が実装
+        id: small-test
+        run: |
+          echo 開発が実装
