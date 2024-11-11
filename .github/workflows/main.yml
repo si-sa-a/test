@@ -15,7 +15,7 @@ jobs:
 
   small-test-notification:
     name: ccc
-    needs: [small-test]
+    needs: [build-and-test, small-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
