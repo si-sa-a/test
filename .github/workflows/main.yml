@@ -12,6 +12,7 @@ jobs:
     name: bbb
     needs: [build-and-test]
     uses: ./.github/workflows/small-test.yml
+    with:
       build_version: ${{ needs.build-and-test.outputs.build_version }}
 
   small-test-notification:
