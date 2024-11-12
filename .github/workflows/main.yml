@@ -8,6 +8,14 @@ jobs:
     name: aaa
     uses: ./.github/workflows/build.yml
 
+  build-notification:
+    name: aaa2
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify
+        run: echo ${{ needs.build-and-test.outputs.build_version }}
+
   small-test:
     name: bbb
     needs: [build-and-test]
