@@ -14,7 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Notify
-        run: echo Build version ${{ needs.build-and-test.outputs.result }}
+        run: |
+          echo Build version ${{ needs.build-and-test.outputs.build_version }}
+          echo Build version ${{ needs.build-and-test.outputs.result }}
+          echo Build version ${{ needs.build-and-test.result }}
 
   small-test:
     name: bbb
