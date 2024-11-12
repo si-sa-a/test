@@ -2,6 +2,10 @@ name: Called Workflow
 
 on:
   workflow_call:
+    inputs:
+      build_version:
+        required: true
+        type: string
 
 jobs:
   small-test:
@@ -14,3 +18,4 @@ jobs:
         id: small-test
         run: |
           echo 開発が実装
+          echo build_version: ${{ inputs.build_version }}"
