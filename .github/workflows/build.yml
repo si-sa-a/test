@@ -17,4 +17,3 @@ jobs:
         run: |
           echo 開発が実装
           echo "build_version=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo $build_version
