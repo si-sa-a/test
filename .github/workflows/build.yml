@@ -1,3 +1,4 @@
+
 name: Called Workflow
 
 on:
@@ -11,9 +12,9 @@ jobs:
       build_version: ${{ steps.build.outputs.build_version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
       - name: Build
         id: build
         run: |
-          echo 開発が実装
-          echo "build_version=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          build_version=$(git rev-parse --short HEAD)
+          echo "build_version=$build_version" >> $GITHUB_OUTPUT
