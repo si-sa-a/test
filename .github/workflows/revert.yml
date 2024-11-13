@@ -1,0 +1,37 @@
+
+name: Revert Latest Merge Commit and Create Bugfix Branch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  revert_and_create_branch:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Configure git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Find latest merge commit
+      id: find_merge
+      run: |
+        latest_merge_commit=$(git log --merges -n 1 --pretty=format:"%H")
+        echo "merge_commit=$latest_merge_commit" >> $GITHUB_ENV
+
+    - name: Revert latest merge commit
+      if: env.merge_commit != ''
+      run: |
+        git checkout main
+        git revert -m 1 ${{ env.merge_commit }}
+        git push origin HEAD:main
+
+    - name: Create and push bugfix branch
+      if: env.merge_commit != ''
+      run: |
+        git checkout -b bugfix/test
+        git push origin bugfix/test
