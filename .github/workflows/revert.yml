@@ -27,7 +27,10 @@ jobs:
         echo "merge_commit=$latest_merge_commit" >> $GITHUB_ENV
 
     - name: Checkout main branch
-      run: git checkout main
+      run: |
+        git checkout main
+        git pull
+        git push
 
     - name: Revert latest merge commit
       if: env.merge_commit != ''
