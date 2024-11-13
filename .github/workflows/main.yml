@@ -1,0 +1,37 @@
+name: Main Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: aaa
+    uses: ./.github/workflows/build.yml
+
+  build-notification:
+    name: aaa2
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify
+        run: |
+          echo Build version ${{ needs.build-and-test.outputs.build_version }}
+          echo Build version ${{ needs.build-and-test.outputs.result }}
+          echo Build version ${{ needs.build-and-test.result }}
+
+  small-test:
+    name: bbb
+    needs: [build-and-test]
+    uses: ./.github/workflows/small-test.yml
+    with:
+      build_version: ${{ needs.build-and-test.outputs.build_version }}
+
+  small-test-notification:
+    name: ccc
+    needs: [build-and-test, small-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Notify
+        run: echo "${{ needs.build-and-test.result }}"
