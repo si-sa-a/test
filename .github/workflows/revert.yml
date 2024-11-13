@@ -4,6 +4,9 @@ name: Revert Latest Merge Commit and Create Bugfix Branch
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   revert_and_create_branch:
     runs-on: ubuntu-latest
@@ -23,15 +26,16 @@ jobs:
         latest_merge_commit=$(git log main --pretty=format:"%H" -n 1)
         echo "merge_commit=$latest_merge_commit" >> $GITHUB_ENV
 
+    - name: Checkout main branch
+      run: git checkout main
+
     - name: Revert latest merge commit
       if: env.merge_commit != ''
       run: |
-        git checkout main
         git revert -m 1 ${{ env.merge_commit }}
         git push origin HEAD:main
 
     - name: Create and push bugfix branch
-      if: env.merge_commit != ''
       run: |
         git checkout -b bugfix/test
         git push origin bugfix/test
