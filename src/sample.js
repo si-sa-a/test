@@ -1,1 +1,1 @@
-console.log("sample!!!A")
+console.log("testA")
