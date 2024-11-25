@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: main
+    path:
+      - "src/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  checks: write
+  pull-requests:  write
+  statuses: write
+
+jobs:
+  deproy:
+    name: deproy
+    runs-on: ubuntu-latest
+    environment: 
+      name: production  # 'production'環境へのデプロイが承認待ち
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Wait for approval (simulated)
+        run: echo "Waiting for approval..."
+      
+      - name: Run tests
+        run: echo "Running Test"
