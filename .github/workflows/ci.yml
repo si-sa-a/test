@@ -13,5 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Wait for approval (simulated)
+        run: echo "Waiting for approval..."
+      
       - name: Run tests
         run: echo "Running Test"
+        environment:
+          name: production  # 'production'環境へのデプロイが承認待ち
