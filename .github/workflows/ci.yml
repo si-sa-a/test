@@ -1,15 +1,17 @@
 name: CI
 
 on:
- pull_request:
-  branches:
-    - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
+
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: Run test
-        run: echo "Running test"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run tests
+        run: echo "Running Test"
