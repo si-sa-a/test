@@ -7,13 +7,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read & write
-  checks: read & write
-  pull-requests: read & write
-  statuses: read & write
+  contents: write
+  checks: write
+  pull-requests:  write
+  statuses: write
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
     environment: 
       name: production  # 'production'環境へのデプロイが承認待ち
