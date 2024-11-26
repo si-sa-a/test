@@ -1,29 +1,41 @@
-name: Check Previous Workflow Status
+name: Check Workflow Status
 
 on:
   workflow_dispatch:
 
 jobs:
-  check_previous_status:
+  check_workflow_status:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Call GitHub API to get workflow runs
-        id: get_previous_runs
+      - name: Get workflow ID
+        id: get_workflow_id
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs?branch=${{ github.ref_name }}" > runs.json
-          previous_run_status=$(jq -r '.workflow_runs[1].conclusion' runs.json)
-          echo "Previous run status: $previous_run_status"
-          echo "status=$previous_run_status" >> $GITHUB_ENV
+          # ワークフロー名を指定
+          WORKFLOW_NAME="deproy"
+          WORKFLOW_ID=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows" | jq -r ".workflows[] | select(.name == \"$WORKFLOW_NAME\") | .id")
+          echo "Workflow ID: $WORKFLOW_ID"
+          echo "workflow_id=$WORKFLOW_ID" >> $GITHUB_ENV
+
+      - name: Get latest workflow run status
+        id: get_latest_status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          WORKFLOW_RUNS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ env.workflow_id }}/runs")
+          LATEST_STATUS=$(echo "$WORKFLOW_RUNS" | jq -r '.workflow_runs[0].conclusion')
+          echo "Latest workflow run status: $LATEST_STATUS"
+          echo "latest_status=$LATEST_STATUS" >> $GITHUB_ENV
 
       - name: Check status
         run: |
-          if [ "${{ env.status }}" != "success" ]; then
-            echo "Previous workflow did not succeed!"
+          if [ "${{ env.latest_status }}" != "success" ]; then
+            echo "The latest workflow did not succeed!"
             exit 1
           else
-            echo "Previous workflow succeeded."
+            echo "The latest workflow succeeded."
           fi
