@@ -1,0 +1,29 @@
+name: Check Previous Workflow Status
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check_previous_status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call GitHub API to get workflow runs
+        id: get_previous_runs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs?branch=${{ github.ref_name }}" > runs.json
+          previous_run_status=$(jq -r '.workflow_runs[1].conclusion' runs.json)
+          echo "Previous run status: $previous_run_status"
+          echo "status=$previous_run_status" >> $GITHUB_ENV
+
+      - name: Check status
+        run: |
+          if [ "${{ env.status }}" != "success" ]; then
+            echo "Previous workflow did not succeed!"
+            exit 1
+          else
+            echo "Previous workflow succeeded."
+          fi
