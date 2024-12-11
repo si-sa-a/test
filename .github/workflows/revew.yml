@@ -8,8 +8,10 @@ jobs:
   auto-approve:
     runs-on: ubuntu-latest
 
-      - name: Automatically approve PR if branch starts with 'revert-'
+    steps:
+      - name: Automatically approve PR
         run: |
+          echo "Automatically approving the PR."
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -d '{"event":"APPROVE"}' \
