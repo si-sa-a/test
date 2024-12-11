@@ -28,6 +28,3 @@ jobs:
       
       - name: Run tests
         run: echo "Running Test"
-  check:
-    needs: [build]
-    uses: ./.github/workflows/getWorkflowsStatus.yml
