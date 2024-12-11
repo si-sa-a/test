@@ -4,6 +4,12 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+  statuses: write
+
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
