@@ -47,7 +47,7 @@ jobs:
 
     - name: リバート用プルリク作成
       run: |
-        gh pr create --title "revert-${{ env.branch_name }}" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
+        gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
 
     - name: 自動レビュー承認
       run: |
