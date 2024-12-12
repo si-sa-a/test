@@ -1,1 +1,1 @@
-console.log("0008")
+console.log("00008")
