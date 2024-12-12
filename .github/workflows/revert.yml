@@ -4,7 +4,9 @@ name: Revert Latest Merge Commit and Create Bugfix Branch
 on:
   workflow_dispatch:
 
-
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   revert_and_create_branch:
@@ -43,9 +45,6 @@ jobs:
     - name: リバート用プルリク作成
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      permissions:
-        contents: write
-        pull-requests: write
       run: |
         gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
 
@@ -61,6 +60,7 @@ jobs:
       env:
         REVIEW_TOKEN: ${{ secrets.REVIEW_TOKEN }}
       run: |
+        unset GITHUB_TOKEN
         echo "${{ secrets.REVIEW_TOKEN }}" | gh auth login --with-token
         gh pr merge "revert-${{ env.branch_name }}" --merge --auto
 
