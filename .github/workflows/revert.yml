@@ -4,8 +4,12 @@ name: Revert Latest Merge Commit and Create Bugfix Branch
 on:
   workflow_dispatch:
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   revert_and_create_branch:
@@ -27,13 +31,36 @@ jobs:
       run: |
         latest_merge_commit=$(git log main --pretty=format:"%H" -n 1)
         echo "merge_commit=$latest_merge_commit" >> $GITHUB_ENV
+        branch_name=$(git log main --pretty=format:"%s" | grep -oP '(?<=/).*$' | head -n 1)
+        echo "branch_name=$branch_name" >> $GITHUB_ENV
 
     - name: Revert latest merge commit
-      if: env.merge_commit != ''
       run: |
         git checkout main
+        git pull origin main
+
+    - name: リバート用ブランチ作成してリバート
+      run: |
+        git checkout -b revert-${{ env.branch_name }}
         git revert -m 1 ${{ env.merge_commit }}
-        git push origin HEAD:main
+        git push origin revert-${{ env.branch_name }}
+
+    - name: リバート用プルリク作成
+      run: |
+        gh pr create --title "revert-${{ env.branch_name }}" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
+
+    - name: 自動レビュー承認
+      run: |
+        gh pr review "revert-${{ env.branch_name }}" --approve
+
+    - name: マージ可能になったらmainマージ
+      run: |
+        gh pr merge "revert-${{ env.branch_name }}" --merge --auto
+
+    - name: 最新のmainをチェックアウト
+      run: |
+        git checkout main
+        git pull origin main
 
     - name: Create and push bugfix branch
       run: |
