@@ -52,7 +52,7 @@ jobs:
       id: create-token
       uses: actions/create-github-app-token@v1
       with:
-        app-id: ${{ secrets.APP_I }}
+        app-id: ${{ secrets.APP_ID }}
         private-key: ${{ secrets.PROCESS_PEM }}
 
     - name: Authenticate with CLI
