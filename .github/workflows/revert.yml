@@ -48,20 +48,26 @@ jobs:
       run: |
         gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
 
-    - name: 自動レビュー承認
-      env:
-        REVIEW_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+    - name: Create Token
+      id: create-token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ secrets.APP_ID }}
+        private-key: ${{ secrets.PROCESS_PEM }}
+
+    - name: Authenticate with CLI
       run: |
         unset GITHUB_TOKEN
-        echo "${{ secrets.REVIEW_TOKEN }}" | gh auth login --with-token
+        echo "${{ steps.create-token.outputs.token }}" | gh auth login --with-token
+        
+    - name: 自動レビュー承認
+      run: |
         gh pr review "revert-${{ env.branch_name }}" --approve
 
     - name: マージ可能になったらmainマージ
       env:
-        REVIEW_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        unset GITHUB_TOKEN
-        echo "${{ secrets.REVIEW_TOKEN }}" | gh auth login --with-token
         gh pr merge "revert-${{ env.branch_name }}" --merge --auto
 
     - name: 最新のmainをチェックアウト
