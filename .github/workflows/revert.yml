@@ -49,6 +49,11 @@ jobs:
       run: |
         gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
 
+    - name: Configure git
+      run: |
+        git config --global user.name 'github-actions-review[bot]'
+        git config --global user.email 'github-actions-review[bot]@users.noreply.github.com'
+
     - name: 自動レビュー承認
       run: |
         gh pr review "revert-${{ env.branch_name }}" --approve
