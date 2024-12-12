@@ -49,17 +49,18 @@ jobs:
       run: |
         gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
 
-    - name: Configure git
-      run: |
-        git config --global user.name 'github-actions-review[bot]'
-        git config --global user.email 'github-actions-review[bot]@users.noreply.github.com'
-
     - name: 自動レビュー承認
+      env:
+        REVIEW_TOKEN: ${{ secrets.REVIEW_TOKEN }}
       run: |
+        echo "${{ secrets.REVIEW_TOKEN }}" | gh auth login --with-token
         gh pr review "revert-${{ env.branch_name }}" --approve
 
     - name: マージ可能になったらmainマージ
+      env:
+        REVIEW_TOKEN: ${{ secrets.REVIEW_TOKEN }}
       run: |
+        echo "${{ secrets.REVIEW_TOKEN }}" | gh auth login --with-token
         gh pr merge "revert-${{ env.branch_name }}" --merge --auto
 
     - name: 最新のmainをチェックアウト
