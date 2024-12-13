@@ -63,6 +63,10 @@ jobs:
       run: |
         gh pr review "revert-${{ env.branch_name }}" --approve
 
+    - name: Authenticate with CLI
+      run: |
+        echo "${{ steps.create-token.outputs.token }}" | gh auth login --with-token
+        
     - name: マージ可能になったらmainマージ
       run: |
         gh pr merge "revert-${{ env.branch_name }}" --merge --auto
