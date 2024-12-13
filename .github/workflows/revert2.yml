@@ -47,25 +47,3 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
-        
-    - name: 自動レビュー承認
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh pr review "revert-${{ env.branch_name }}" --approve
-
-    - name: マージ可能になったらmainマージ
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh pr merge "revert-${{ env.branch_name }}" --merge --auto
-
-    - name: 最新のmainをチェックアウト
-      run: |
-        git checkout main
-        git pull origin main
-
-    - name: Create and push bugfix branch
-      run: |
-        git checkout -b bugfix/test
-        git push origin bugfix/test

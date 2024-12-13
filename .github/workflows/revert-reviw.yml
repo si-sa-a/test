@@ -1,0 +1,47 @@
+name: Revert-reviw
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  revert_and_create_branch:
+    if: ${{ github.actor == 'github-actions[bot]' }}
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config --global user.name 'github-actions2[bot]'
+          git config --global user.email 'github-actions2[bot]@users.noreply.github.com'
+
+
+      - name: 自動レビュー承認
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr review "revert-${{ env.branch_name }}" --approve
+
+      - name: マージ可能になったらmainマージ
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "revert-${{ env.branch_name }}" --merge --auto
+
+      - name: 最新のmainをチェックアウト
+        run: |
+          git checkout main
+          git pull origin main
+
+      - name: Create and push bugfix branch
+        run: |
+          git checkout -b bugfix/test
+          git push origin bugfix/test
