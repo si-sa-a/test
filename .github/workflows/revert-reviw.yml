@@ -26,13 +26,18 @@ jobs:
         git config --global user.name 'github-actions2[bot]'
         git config --global user.email 'github-actions2[bot]@users.noreply.github.com'
 
-    - name: 自動レビュー承認
+    - name: Clear GH_TOKEN environment variable
+      run: unset GH_TOKEN
+
+    - name: Authenticate with GitHub CLI
       env:
         GITHUB_TOKEN: ${{ secrets.REVIW_TOKEN }}
       run: |
-        pr_number=$(gh pr list --state open --json number --jq '.[0].number')
-        unset GH_TOKEN
         echo "${{ secrets.REVIW_TOKEN }}" | gh auth login --with-token
+        
+    - name: 自動レビュー承認
+      run: |
+        pr_number=$(gh pr list --state open --json number --jq '.[0].number')
         gh pr review $pr_number --approve
 
     - name: マージ可能になったらmainマージ
