@@ -64,8 +64,6 @@ jobs:
         gh pr review "revert-${{ env.branch_name }}" --approve
 
     - name: マージ可能になったらmainマージ
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh pr merge "revert-${{ env.branch_name }}" --merge --auto
 
