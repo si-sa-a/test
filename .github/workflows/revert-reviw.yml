@@ -2,8 +2,10 @@
 name: Revert-review
 
 on:
-  pull_request:
-    types: [opened]
+  workflow_run:
+    workflows: ["Revert 2"]
+    types:
+      - completed
   
 permissions:
   contents: write
@@ -28,13 +30,15 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh pr review ${{ github.event.pull_request.number }} --approve
+        pr_number=$(gh pr list --state open --json number --jq '.[0].number')
+        gh pr review $pr_number --approve
 
     - name: マージ可能になったらmainマージ
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh pr merge ${{ github.event.pull_request.number }} --merge --auto
+        pr_number=$(gh pr list --state open --json number --jq '.[0].number')
+        gh pr merge $pr_number --merge --auto
 
     - name: 最新のmainをチェックアウト
       run: |
