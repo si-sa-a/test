@@ -42,12 +42,6 @@ jobs:
         git revert -m 1 ${{ env.merge_commit }}
         git push origin revert-${{ env.branch_name }}
 
-    - name: リバート用プルリク作成
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
-
     - name: Create Token
       id: create-token
       uses: actions/create-github-app-token@v1
@@ -57,10 +51,15 @@ jobs:
 
     - name: Authenticate with CLI
       run: |
-        unset GITHUB_TOKEN
         echo "${{ steps.create-token.outputs.token }}" | gh auth login --with-token
+
+    - name: リバート用プルリク作成
+      run: |
+        gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
         
     - name: 自動レビュー承認
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh pr review "revert-${{ env.branch_name }}" --approve
 
