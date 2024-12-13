@@ -4,7 +4,7 @@ name: Revert-review
 on:
   pull_request:
   workflow_dispatch:
-  
+
 permissions:
   contents: write
   pull-requests: write
@@ -28,13 +28,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh pr review ${{ github.event.pull_request.number }} --approve
+        gh pr review 71 --approve
 
     - name: マージ可能になったらmainマージ
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh pr merge ${{ github.event.pull_request.number }} --merge --auto
+        gh pr merge 71 --merge --auto
 
     - name: 最新のmainをチェックアウト
       run: |
