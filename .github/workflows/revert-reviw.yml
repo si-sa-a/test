@@ -28,10 +28,11 @@ jobs:
 
     - name: 自動レビュー承認
       env:
-        GH_TOKEN: ${{ secrets.REVIW_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.REVIW_TOKEN }}
       run: |
         pr_number=$(gh pr list --state open --json number --jq '.[0].number')
-        gh auth login --with-token
+        unset GH_TOKEN
+        echo "${{ secrets.REVIW_TOKEN }}" | gh auth login --with-token
         gh pr review $pr_number --approve
 
     - name: マージ可能になったらmainマージ
