@@ -1,0 +1,56 @@
+
+name: Revert-review
+
+on:
+  workflow_run:
+    workflows: ["Revert 2"]
+    types:
+      - completed
+  
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  revert_and_create_branch:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Configure git
+      run: |
+        git config --global user.name 'github-actions2[bot]'
+        git config --global user.email 'github-actions2[bot]@users.noreply.github.com'
+
+    - name: Clear GH_TOKEN environment variable
+      run: unset GH_TOKEN
+
+    - name: Authenticate with GitHub CLI
+      run: |
+        echo "${{ secrets.REVIW_TOKEN }}" | gh auth login --with-token
+
+    - name: 自動レビュー承認
+      run: |
+        pr_number=$(gh pr list --state open --json number --jq '.[0].number')
+        gh pr review $pr_number --approve
+
+    - name: マージ可能になったらmainマージ
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        pr_number=$(gh pr list --state open --json number --jq '.[0].number')
+        gh pr merge $pr_number --merge --auto
+
+    - name: 最新のmainをチェックアウト
+      run: |
+        git checkout main
+        git pull origin main
+
+    - name: Create and push bugfix branch
+      run: |
+        git checkout -b bugfix/test
+        git push origin bugfix/test

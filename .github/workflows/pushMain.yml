@@ -1,10 +1,9 @@
 name: deproy
 
 on:
-  push:
-    branches: main
-    path:
-      - "src/**"
+  pull_request_target:
+    types:
+      - closed
   workflow_dispatch:
 
 permissions:
