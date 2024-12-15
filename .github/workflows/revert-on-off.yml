@@ -34,19 +34,20 @@ jobs:
         
     - name: Toggle Enforcement OFF
       run: |
+        echo '{
+          "enforce_admins": false,
+          "required_status_checks": {
+            "strict": true,
+            "contexts": []
+          },
+          "required_pull_request_reviews": null,
+          "restrictions": null
+        }' > body.json
         gh api \
           -X PUT \
           -H "Accept: application/vnd.github.v3+json" \
-          /repos/${{ github.repository }}/branches/main/protection \
-          -d '{
-            "enforce_admins": false,
-            "required_status_checks": {
-              "strict": true,
-              "contexts": []
-            },
-            "required_pull_request_reviews": null,
-            "restrictions": null
-          }'
+          /repos/si-sa-a/test/branches/main/protection \
+          --input body.json
 
     - name: Revert latest merge commit
       if: env.merge_commit != ''
@@ -57,19 +58,20 @@ jobs:
 
     - name: Toggle Enforcement ON
       run: |
+        echo '{
+          "enforce_admins": true,
+          "required_status_checks": {
+            "strict": true,
+            "contexts": []
+          },
+          "required_pull_request_reviews": null,
+          "restrictions": null
+        }' > body.json
         gh api \
           -X PUT \
           -H "Accept: application/vnd.github.v3+json" \
-          /repos/${{ github.repository }}/branches/main/protection \
-          -d '{
-            "enforce_admins": true,
-            "required_status_checks": {
-              "strict": true,
-              "contexts": []
-            },
-            "required_pull_request_reviews": null,
-            "restrictions": null
-          }'
+          /repos/si-sa-a/test/branches/main/protection \
+          --input body.json
 
     - name: Create and push bugfix branch
       run: |
