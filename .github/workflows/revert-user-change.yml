@@ -47,7 +47,17 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh pr create --title "revert-${{ env.branch_name }}" --body "" --head "revert-${{ env.branch_name }}" --base main --repo ${{ github.repository }}
-        
+
+    - name: Reset and Configure Git User
+      run: |
+        # 現在の設定を削除
+        git config --global --unset user.name || true
+        git config --global --unset user.email || true
+    
+        # 新しいユーザーを設定
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@example.com"
+
     - name: 自動レビュー承認
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
