@@ -6,11 +6,7 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-  checks: write
-  pull-requests:  write
-  statuses: write
+permissions: write-all
 
 jobs:
   build:

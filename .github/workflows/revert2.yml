@@ -4,9 +4,7 @@ name: Revert 2
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: write-all
 
 jobs:
   revert_and_create_branch:
