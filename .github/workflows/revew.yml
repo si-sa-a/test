@@ -3,9 +3,7 @@ name: Auto-approve PR for revert branches
 on:
   pull_request:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: write-all
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
